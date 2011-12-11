@@ -181,11 +181,10 @@ NSArray *applicationProviders() {
 
 - (QSObject *)performAction:(QSAction *)action directObject:(QSBasicObject *)dObject indirectObject:(QSBasicObject *)iObject {
     NSPasteboard *pboard = [NSPasteboard pasteboardWithUniqueName];
-    
+    NSDictionary *thisService = nil;
 	//NSLog(@"perform %@ %@ %@",[action actionDict],serviceArray,self);
-    
-    for (NSDictionary *thisService in serviceArray) {
 
+    for (thisService in serviceArray) {
        // NSLog(@"'%@' '%@'",[action identifier],[[thisService objectForKey:NSMenuItemKey]objectForKey:DefaultKey]);
         
         if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
