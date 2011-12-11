@@ -251,6 +251,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B230F45BCA6009433C0 /* Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 			};
 			name = Debug;
 		};
@@ -258,6 +259,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B290F45BCA6009433C0 /* Release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 			};
 			name = Release;
 		};
