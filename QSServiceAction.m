@@ -31,15 +31,11 @@ NSMutableArray *servicesForBundle(NSString *path) {
 NSArray *providersAtPath(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-    NSString *itemPath;
-    NSArray *subPaths;
-    int i;
-    
+       
     path = [path stringByStandardizingPath];
-    subPaths = [manager subpathsAtPath:path];
+    NSArray *subPaths = [manager subpathsAtPath:path];
     
-    for (i = 0; i < [subPaths count]; i++){
-        itemPath = [subPaths objectAtIndex:i];
+    for (NSString *itemPath in subPaths){
         if ([itemPath hasSuffix:infoPath]) {
             itemPath = [path stringByAppendingPathComponent:itemPath];
             if ([[NSMutableDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey]) {
@@ -52,12 +48,11 @@ NSArray *providersAtPath(NSString *path) {
 
 NSArray *applicationProviders() {
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-    NSString *itemPath;
-    NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
-    int i;
+
     
-    for (i = 0; i < [apps count]; i++){
-        itemPath = [apps objectAtIndex:i];
+    NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
+    
+    for (NSString *itemPath in apps){
         if ([[NSMutableDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey]) {
             [providers addObject:itemPath];
         }
@@ -76,9 +71,9 @@ NSArray *applicationProviders() {
 	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
-    int i;
-    for (i = 0; i < [serviceActions count]; i++) {
-		[QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[[serviceActions objectAtIndex:i] actions] waitUntilDone:YES];
+
+    for (id individualAction in serviceActions) {
+		[QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
 	}
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
@@ -95,9 +90,8 @@ NSArray *applicationProviders() {
     NSArray *providerArray = [providerSet allObjects];
     NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerArray count]];
     
-    int i;
-    for (i = 0; i < [providerArray count]; i++)
-        [actionObjects addObject:[[self class] serviceActionsForBundle:[providerArray objectAtIndex:i]]];
+    for (id individualProvider in providerArray)
+        [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
     
     return actionObjects;
 }
@@ -124,9 +118,8 @@ NSArray *applicationProviders() {
     NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:serviceBundle];
     [icon setSize:NSMakeSize(16, 16)];
 
-    int i;
-    for (i = 0; i < [serviceArray count]; i++) {
-		NSDictionary *thisService = [serviceArray objectAtIndex:i];
+    for (NSDictionary *thisService in serviceArray) {
+
         NSString *serviceString = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
         
         NSDictionary *serviceModifications = [modificationsDictionary objectForKey:serviceString];
@@ -163,10 +156,8 @@ NSArray *applicationProviders() {
 	NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
     
     NSString *menuItem;
-    int i;
 	// NSLog(@"services%@", serviceArray);
-    for (i = 0; i < [serviceArray count]; i++) {
-        NSDictionary *thisService = [serviceArray objectAtIndex:i];
+    for (NSDictionary *thisService in serviceArray) {
         menuItem = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
         
         BOOL disabled = [[[modificationsDictionary objectForKey:menuItem] objectForKey:@"disabled"] boolValue];
@@ -190,11 +181,11 @@ NSArray *applicationProviders() {
 
 - (QSObject *)performAction:(QSAction *)action directObject:(QSBasicObject *)dObject indirectObject:(QSBasicObject *)iObject {
     NSPasteboard *pboard = [NSPasteboard pasteboardWithUniqueName];
-    NSDictionary *thisService = nil;
+    
 	//NSLog(@"perform %@ %@ %@",[action actionDict],serviceArray,self);
-    int i;
-    for (i = 0; i < [serviceArray count]; i++) {
-        thisService = [serviceArray objectAtIndex:i];
+    
+    for (NSDictionary *thisService in serviceArray) {
+
        // NSLog(@"'%@' '%@'",[action identifier],[[thisService objectForKey:NSMenuItemKey]objectForKey:DefaultKey]);
         
         if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
