@@ -76,9 +76,11 @@ NSArray *applicationProviders() {
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
 
-    for (id individualAction in serviceActions) {
-		[QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
-	}
+    @autoreleasepool {
+        for (id individualAction in serviceActions) {
+            [QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
+        }
+    }
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
     [pool release];
