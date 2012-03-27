@@ -20,6 +20,8 @@
 #define NSKeyEquivalentKey 		@"NSKeyEquivalent"
 #define infoPath			@"Contents/Info.plist"
 
+#define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
+
 NSMutableArray *servicesForBundle(NSString *path) {
     if (path) {
         NSString *dictPath = [path stringByAppendingPathComponent:infoPath];
@@ -130,6 +132,7 @@ NSArray *applicationProviders() {
     if (![serviceArray count]) {
         return nil;
     }
+    NSBundle *servicesBundle = [NSBundle bundleWithIdentifier:kBundleID];
     
     for (NSDictionary *thisService in serviceArray) {
 
@@ -155,11 +158,12 @@ NSArray *applicationProviders() {
             [serviceAction setName:[(NSDictionary *)serviceModifications objectForKey:@"name"]];
 		
 		NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
-		
+        
 		if (sendTypes) {
 			[serviceAction setDirectTypes:sendTypes];
 		}
 		
+        [serviceAction setBundle:servicesBundle];
 		[serviceAction setIcon:icon];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
