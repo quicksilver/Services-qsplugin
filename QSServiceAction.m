@@ -20,6 +20,8 @@
 #define NSKeyEquivalentKey 		@"NSKeyEquivalent"
 #define infoPath			@"Contents/Info.plist"
 
+#define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
+
 NSMutableArray *servicesForBundle(NSString *path) {
     if (path) {
         NSString *dictPath = [path stringByAppendingPathComponent:infoPath];
@@ -31,19 +33,17 @@ NSMutableArray *servicesForBundle(NSString *path) {
 NSArray *providersAtPath(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-    NSString *itemPath;
-    NSArray *subPaths;
-    int i;
-    
+       
     path = [path stringByStandardizingPath];
-    subPaths = [manager subpathsAtPath:path];
-    
-    for (i = 0; i < [subPaths count]; i++){
-        itemPath = [subPaths objectAtIndex:i];
-        if ([itemPath hasSuffix:infoPath]) {
-            itemPath = [path stringByAppendingPathComponent:itemPath];
-            if ([[NSMutableDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey]) {
-                [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+    NSArray *subPaths = [manager subpathsAtPath:path];
+    @autoreleasepool {
+        for (NSString *itemPath in subPaths){
+            if ([itemPath hasSuffix:infoPath]) {
+                itemPath = [path stringByAppendingPathComponent:itemPath];
+                NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
+                if ([servicesDict count]) {
+                    [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                }
             }
         }
     }
@@ -52,14 +52,15 @@ NSArray *providersAtPath(NSString *path) {
 
 NSArray *applicationProviders() {
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-    NSString *itemPath;
-    NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
-    int i;
+
     
-    for (i = 0; i < [apps count]; i++){
-        itemPath = [apps objectAtIndex:i];
-        if ([[NSMutableDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey]) {
-            [providers addObject:itemPath];
+    NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
+    @autoreleasepool {
+        for (NSString *itemPath in apps){
+            NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
+            if ([servicesDict count]) {
+                [providers addObject:itemPath];
+            }
         }
     }
     return providers;
@@ -76,10 +77,12 @@ NSArray *applicationProviders() {
 	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
-    int i;
-    for (i = 0; i < [serviceActions count]; i++) {
-		[QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[[serviceActions objectAtIndex:i] actions] waitUntilDone:YES];
-	}
+
+    @autoreleasepool {
+        for (id individualAction in serviceActions) {
+            [QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
+        }
+    }
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
     [pool release];
@@ -95,9 +98,11 @@ NSArray *applicationProviders() {
     NSArray *providerArray = [providerSet allObjects];
     NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerArray count]];
     
-    int i;
-    for (i = 0; i < [providerArray count]; i++)
-        [actionObjects addObject:[[self class] serviceActionsForBundle:[providerArray objectAtIndex:i]]];
+    @autoreleasepool {
+        for (id individualProvider in providerArray) {
+            [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
+        }
+    }
     
     return actionObjects;
 }
@@ -123,29 +128,44 @@ NSArray *applicationProviders() {
     NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
     NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:serviceBundle];
     [icon setSize:NSMakeSize(16, 16)];
+    
+    if (![serviceArray count]) {
+        return nil;
+    }
+    NSBundle *servicesBundle = [NSBundle bundleWithIdentifier:kBundleID];
+    
+    for (NSDictionary *thisService in serviceArray) {
 
-    int i;
-    for (i = 0; i < [serviceArray count]; i++) {
-		NSDictionary *thisService = [serviceArray objectAtIndex:i];
         NSString *serviceString = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
         
-        NSDictionary *serviceModifications = [modificationsDictionary objectForKey:serviceString];
-        if ([[serviceModifications objectForKey:@"disabled"] boolValue])
+        if (!serviceString) {
+            continue;
+        }
+        id serviceModifications = [modificationsDictionary objectForKey:serviceString];
+        
+        if ([serviceModifications isKindOfClass:[NSString class]]) {
+            NSLog(@"Couldn't get action for %@ with service string %@",thisService,serviceString);
+            continue;
+        }
+        
+        if ([[(NSDictionary *)serviceModifications objectForKey:@"disabled"] boolValue])
             continue;
         
         QSAction *serviceAction = [[QSAction alloc] init];
         [serviceAction setIdentifier:serviceString];
 		
-        if ([serviceModifications objectForKey:@"name"])
-            [serviceAction setName:[serviceModifications objectForKey:@"name"]];
+        if ([(NSDictionary *)serviceModifications objectForKey:@"name"])
+            [serviceAction setName:[(NSDictionary *)serviceModifications objectForKey:@"name"]];
 		
 		NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
-		
+        
 		if (sendTypes) {
 			[serviceAction setDirectTypes:sendTypes];
 		}
 		
+        [serviceAction setBundle:servicesBundle];
 		[serviceAction setIcon:icon];
+        [serviceAction setIconLoaded:YES];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
@@ -163,23 +183,23 @@ NSArray *applicationProviders() {
 	NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
     
     NSString *menuItem;
-    int i;
 	// NSLog(@"services%@", serviceArray);
-    for (i = 0; i < [serviceArray count]; i++) {
-        NSDictionary *thisService = [serviceArray objectAtIndex:i];
-        menuItem = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
-        
-        BOOL disabled = [[[modificationsDictionary objectForKey:menuItem] objectForKey:@"disabled"] boolValue];
-        if (menuItem && !disabled) {
-            NSSet *sendTypes = [NSSet setWithArray:[thisService objectForKey:NSSendTypesKey]];
-            NSSet *availableTypes = [NSSet setWithArray:[dObject types]];
+    @autoreleasepool {
+        for (NSDictionary *thisService in serviceArray) {
+            menuItem = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
             
-            // Add if they intersect, but ignore ex
-            if ([sendTypes intersectsSet:availableTypes]){
-                if (fileType && ![sendTypes containsObject:NSFilenamesPboardType])
-                    continue;
-				
-                [newActions addObject:menuItem];
+            BOOL disabled = [[[modificationsDictionary objectForKey:menuItem] objectForKey:@"disabled"] boolValue];
+            if (menuItem && !disabled) {
+                NSSet *sendTypes = [NSSet setWithArray:[thisService objectForKey:NSSendTypesKey]];
+                NSSet *availableTypes = [NSSet setWithArray:[dObject types]];
+                
+                // Add if they intersect, but ignore ex
+                if ([sendTypes intersectsSet:availableTypes]){
+                    if (fileType && ![sendTypes containsObject:NSFilenamesPboardType])
+                        continue;
+                    
+                    [newActions addObject:menuItem];
+                }
             }
         }
     }
@@ -192,15 +212,16 @@ NSArray *applicationProviders() {
     NSPasteboard *pboard = [NSPasteboard pasteboardWithUniqueName];
     NSDictionary *thisService = nil;
 	//NSLog(@"perform %@ %@ %@",[action actionDict],serviceArray,self);
-    int i;
-    for (i = 0; i < [serviceArray count]; i++) {
-        thisService = [serviceArray objectAtIndex:i];
-       // NSLog(@"'%@' '%@'",[action identifier],[[thisService objectForKey:NSMenuItemKey]objectForKey:DefaultKey]);
-        
-        if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
-            NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
-            [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
-            break;
+
+    @autoreleasepool {
+        for (thisService in serviceArray) {
+            // NSLog(@"'%@' '%@'",[action identifier],[[thisService objectForKey:NSMenuItemKey]objectForKey:DefaultKey]);
+            
+            if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
+                NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
+                [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
+                break;
+            }
         }
     }
     
