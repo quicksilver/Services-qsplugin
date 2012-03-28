@@ -165,6 +165,7 @@ NSArray *applicationProviders() {
 		
         [serviceAction setBundle:servicesBundle];
 		[serviceAction setIcon:icon];
+        [serviceAction setIconLoaded:YES];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
