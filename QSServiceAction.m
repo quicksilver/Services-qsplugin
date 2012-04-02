@@ -22,11 +22,16 @@
 
 #define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
 
-NSMutableArray *QSServicesPlugin_servicesForBundle(NSString *path) {
+NSArray *QSServicesPlugin_servicesForBundle(NSString *path) {
     if (path) {
         NSString *dictPath = [path stringByAppendingPathComponent:infoPath];
-        NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:dictPath];
-        return [infoDictionary objectForKey:NSServicesKey];
+        NSDictionary *infoDictionary = [NSDictionary dictionaryWithContentsOfFile:dictPath];
+        if ([infoDictionary isKindOfClass:[NSDictionary class]]) {
+            NSArray* array = [infoDictionary objectForKey:NSServicesKey];
+            if ([array isKindOfClass:[NSArray class]]) {
+                return array;
+            }
+        }
     }
     return nil;
 }
@@ -41,7 +46,7 @@ NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
             if ([itemPath hasSuffix:infoPath]) {
                 itemPath = [path stringByAppendingPathComponent:itemPath];
                 NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
-                if ([servicesDict count]) {
+                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
                     [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
                 }
             }
@@ -58,7 +63,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
     @autoreleasepool {
         for (NSString *itemPath in apps){
             NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
-            if ([servicesDict count]) {
+            if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
                 [providers addObject:itemPath];
             }
         }
