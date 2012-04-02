@@ -22,7 +22,7 @@
 
 #define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
 
-NSMutableArray *servicesForBundle(NSString *path) {
+NSMutableArray *QSServicesPlugin_servicesForBundle(NSString *path) {
     if (path) {
         NSString *dictPath = [path stringByAppendingPathComponent:infoPath];
         NSMutableDictionary *infoDictionary = [NSMutableDictionary dictionaryWithContentsOfFile:dictPath];
@@ -30,7 +30,7 @@ NSMutableArray *servicesForBundle(NSString *path) {
     }
     return nil;
 }
-NSArray *providersAtPath(NSString *path) {
+NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
        
@@ -50,7 +50,7 @@ NSArray *providersAtPath(NSString *path) {
     return providers;
 }
 
-NSArray *applicationProviders() {
+NSArray *QSServicesPlugin_applicationProviders() {
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
 
     
@@ -91,10 +91,10 @@ NSArray *applicationProviders() {
 
 + (NSArray *)allServiceActions {
     NSMutableSet *providerSet = [NSMutableSet setWithCapacity:1];
-    [providerSet addObjectsFromArray:applicationProviders()];
-    [providerSet addObjectsFromArray:providersAtPath(@"/System/Library/Services/")];
-    [providerSet addObjectsFromArray:providersAtPath(@"/Library/Services/")];
-    [providerSet addObjectsFromArray:providersAtPath(@"~/Library/Services/")];
+    [providerSet addObjectsFromArray:QSServicesPlugin_applicationProviders()];
+    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/System/Library/Services/")];
+    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/Library/Services/")];
+    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
     NSArray *providerArray = [providerSet allObjects];
     NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerArray count]];
     
@@ -115,7 +115,7 @@ NSArray *applicationProviders() {
 - (id)initWithBundlePath:(NSString *)path {
     if (self = [super init]) {
         serviceBundle = [path copy];
-        serviceArray = [servicesForBundle(path) retain];
+        serviceArray = [QSServicesPlugin_servicesForBundle(path) retain];
         NSString *bundleIdentifier = [[NSBundle bundleWithPath:path] bundleIdentifier];
         modificationsDictionary = [[[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"NSServiceModifications" ofType:@"plist"]] objectForKey:bundleIdentifier] retain];
     }
@@ -135,7 +135,6 @@ NSArray *applicationProviders() {
     NSBundle *servicesBundle = [NSBundle bundleWithIdentifier:kBundleID];
     
     for (NSDictionary *thisService in serviceArray) {
-
         NSString *serviceString = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
         
         if (!serviceString) {
@@ -171,6 +170,7 @@ NSArray *applicationProviders() {
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
 		
 		[newActions addObject:serviceAction];
+
     }
 	return newActions;
 }
