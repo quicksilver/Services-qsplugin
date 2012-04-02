@@ -138,28 +138,28 @@ NSArray *QSServicesPlugin_applicationProviders() {
         return nil;
     }
     NSBundle *servicesBundle = [NSBundle bundleWithIdentifier:kBundleID];
-    
+    NSString *serviceString = nil;
     for (NSDictionary *thisService in serviceArray) {
-        NSString *serviceString = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
+        @try {
+            serviceString = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"Exception: %@ for service array: %@",exception,serviceArray);
+        }
         
         if (!serviceString) {
             continue;
         }
-        id serviceModifications = [modificationsDictionary objectForKey:serviceString];
+        NSDictionary *serviceModifications = [modificationsDictionary objectForKey:serviceString];
         
-        if ([serviceModifications isKindOfClass:[NSString class]]) {
-            NSLog(@"Couldn't get action for %@ with service string %@",thisService,serviceString);
-            continue;
-        }
-        
-        if ([[(NSDictionary *)serviceModifications objectForKey:@"disabled"] boolValue])
+        if ([[serviceModifications objectForKey:@"disabled"] boolValue])
             continue;
         
         QSAction *serviceAction = [[QSAction alloc] init];
         [serviceAction setIdentifier:serviceString];
 		
-        if ([(NSDictionary *)serviceModifications objectForKey:@"name"])
-            [serviceAction setName:[(NSDictionary *)serviceModifications objectForKey:@"name"]];
+        if ([serviceModifications objectForKey:@"name"])
+            [serviceAction setName:[serviceModifications objectForKey:@"name"]];
 		
 		NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
         
@@ -191,7 +191,12 @@ NSArray *QSServicesPlugin_applicationProviders() {
 	// NSLog(@"services%@", serviceArray);
     @autoreleasepool {
         for (NSDictionary *thisService in serviceArray) {
-            menuItem = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
+            @try {
+                menuItem = [[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey];
+            }
+            @catch (NSException *exception) {
+                NSLog(@"Exception: %@ for service array %@",exception,serviceArray);
+            }
             
             BOOL disabled = [[[modificationsDictionary objectForKey:menuItem] objectForKey:@"disabled"] boolValue];
             if (menuItem && !disabled) {
@@ -221,11 +226,15 @@ NSArray *QSServicesPlugin_applicationProviders() {
     @autoreleasepool {
         for (thisService in serviceArray) {
             // NSLog(@"'%@' '%@'",[action identifier],[[thisService objectForKey:NSMenuItemKey]objectForKey:DefaultKey]);
-            
-            if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
-                NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
-                [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
-                break;
+            @try {
+                if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
+                    NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
+                    [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
+                    break;
+                }
+            }
+            @catch (NSException *exception) {
+                NSLog(@"Exception: %@ in service array: %@",exception,serviceArray);
             }
         }
     }
