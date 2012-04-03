@@ -97,11 +97,10 @@ NSArray *QSServicesPlugin_applicationProviders() {
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/System/Library/Services/")];
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/Library/Services/")];
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
-    NSArray *providerArray = [providerSet allObjects];
-    NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerArray count]];
+    NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerSet count]];
     
     @autoreleasepool {
-        for (id individualProvider in providerArray) {
+        for (id individualProvider in providerSet) {
             [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
         }
     }
