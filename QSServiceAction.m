@@ -77,9 +77,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 	[NSThread detachNewThreadSelector:@selector(loadServiceActions) toTarget:self withObject:nil];
 }
 
-+ (void)loadServiceActions {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
++ (void)loadServiceActions {	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
 
@@ -90,7 +88,6 @@ NSArray *QSServicesPlugin_applicationProviders() {
     }
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
-    [pool release];
 }
 
 
