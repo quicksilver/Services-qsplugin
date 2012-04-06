@@ -45,9 +45,11 @@ NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
         for (NSString *itemPath in subPaths){
             if ([itemPath hasSuffix:infoPath]) {
                 itemPath = [path stringByAppendingPathComponent:itemPath];
-                NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
-                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                    [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
+                for (NSDictionary *servicesDict in servicesArray) {
+                    if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                        [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                    }
                 }
             }
         }
@@ -62,9 +64,11 @@ NSArray *QSServicesPlugin_applicationProviders() {
     NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
     @autoreleasepool {
         for (NSString *itemPath in apps){
-            NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
-            if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                [providers addObject:itemPath];
+            NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
+            for (NSDictionary *servicesDict in servicesArray) {
+                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                    [providers addObject:itemPath];
+                }
             }
         }
     }
