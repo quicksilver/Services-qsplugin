@@ -45,9 +45,11 @@ NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
         for (NSString *itemPath in subPaths){
             if ([itemPath hasSuffix:infoPath]) {
                 itemPath = [path stringByAppendingPathComponent:itemPath];
-                NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
-                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                    [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
+                for (NSDictionary *servicesDict in servicesArray) {
+                    if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                        [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                    }
                 }
             }
         }
@@ -62,9 +64,11 @@ NSArray *QSServicesPlugin_applicationProviders() {
     NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
     @autoreleasepool {
         for (NSString *itemPath in apps){
-            NSDictionary *servicesDict = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
-            if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                [providers addObject:itemPath];
+            NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
+            for (NSDictionary *servicesDict in servicesArray) {
+                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                    [providers addObject:itemPath];
+                }
             }
         }
     }
@@ -77,9 +81,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 	[NSThread detachNewThreadSelector:@selector(loadServiceActions) toTarget:self withObject:nil];
 }
 
-+ (void)loadServiceActions {
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	
++ (void)loadServiceActions {	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
 
@@ -90,7 +92,6 @@ NSArray *QSServicesPlugin_applicationProviders() {
     }
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
-    [pool release];
 }
 
 
@@ -100,11 +101,10 @@ NSArray *QSServicesPlugin_applicationProviders() {
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/System/Library/Services/")];
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/Library/Services/")];
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
-    NSArray *providerArray = [providerSet allObjects];
-    NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerArray count]];
+    NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerSet count]];
     
     @autoreleasepool {
-        for (id individualProvider in providerArray) {
+        for (id individualProvider in providerSet) {
             [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
         }
     }
