@@ -27,14 +27,13 @@
 		4D308B240F45BCA6009433C0 /* Developer.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Developer.xcconfig; sourceTree = "<group>"; };
 		4D308B250F45BCA6009433C0 /* QSPlugIn.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn.xcconfig; sourceTree = "<group>"; };
 		4D308B260F45BCA6009433C0 /* QSPlugIn_Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn_Debug.xcconfig; sourceTree = "<group>"; };
-		4D308B270F45BCA6009433C0 /* QSPlugIn_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSPlugIn_Prefix.pch; sourceTree = "<group>"; };
 		4D308B280F45BCA6009433C0 /* QSPlugIn_Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = QSPlugIn_Release.xcconfig; sourceTree = "<group>"; };
 		4D308B290F45BCA6009433C0 /* Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		4D4D66DB0F4722D600DAAB6B /* NSServiceModifications.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = NSServiceModifications.plist; sourceTree = "<group>"; };
 		7FE1627408294A8B00667242 /* QSServiceAction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QSServiceAction.h; sourceTree = "<group>"; };
 		7FE1627508294A8B00667242 /* QSServiceAction.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSServiceAction.m; sourceTree = "<group>"; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1AC9740486D14A00FE50C9 /* Services Menu Module.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Services Menu Module.qsplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "Services Menu Plugin.qsplugin"; path = "Services Menu Plugin.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +77,7 @@
 		1ED78706FE9D4A0611CA0C5A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1AC9740486D14A00FE50C9 /* Services Menu Module.qsplugin */,
+				8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,12 +119,12 @@
 				4D308B240F45BCA6009433C0 /* Developer.xcconfig */,
 				4D308B250F45BCA6009433C0 /* QSPlugIn.xcconfig */,
 				4D308B260F45BCA6009433C0 /* QSPlugIn_Debug.xcconfig */,
-				4D308B270F45BCA6009433C0 /* QSPlugIn_Prefix.pch */,
 				4D308B280F45BCA6009433C0 /* QSPlugIn_Release.xcconfig */,
 				4D308B290F45BCA6009433C0 /* Release.xcconfig */,
 			);
-			path = Configuration;
-			sourceTree = QS_SOURCE_ROOT;
+			name = Configuration;
+			path = /private/tmp/QS/Configuration;
+			sourceTree = "<absolute>";
 		};
 		7FC20C8107FB741700FDD3CA /* Other Frameworks */ = {
 			isa = PBXGroup;
@@ -137,9 +136,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8D1AC9600486D14A00FE50C9 /* Services Menu Module */ = {
+		8D1AC9600486D14A00FE50C9 /* Services Menu Plugin */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 7FFF24FF085E488600266176 /* Build configuration list for PBXNativeTarget "Services Menu Module" */;
+			buildConfigurationList = 7FFF24FF085E488600266176 /* Build configuration list for PBXNativeTarget "Services Menu Plugin" */;
 			buildPhases = (
 				8D1AC9660486D14A00FE50C9 /* Resources */,
 				8D1AC96A0486D14A00FE50C9 /* Sources */,
@@ -150,10 +149,10 @@
 			);
 			dependencies = (
 			);
-			name = "Services Menu Module";
+			name = "Services Menu Plugin";
 			productInstallPath = "$(HOME)/Developer/Palettes";
 			productName = QSServicesMenuPlugIn;
-			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Module.qsplugin */;
+			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -175,7 +174,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8D1AC9600486D14A00FE50C9 /* Services Menu Module */,
+				8D1AC9600486D14A00FE50C9 /* Services Menu Plugin */,
 			);
 		};
 /* End PBXProject section */
@@ -223,13 +222,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B260F45BCA6009433C0 /* QSPlugIn_Debug.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_APPS_DIR)/Quicksilver.app/Contents/Frameworks\"";
 				OTHER_LDFLAGS = "-bundle";
-				PRODUCT_NAME = "Services Menu Module";
+				PRODUCT_NAME = "Services Menu Plugin";
 			};
 			name = Debug;
 		};
@@ -237,13 +231,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B280F45BCA6009433C0 /* QSPlugIn_Release.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SYSTEM_APPS_DIR)/Quicksilver.app/Contents/Frameworks\"";
 				OTHER_LDFLAGS = "-bundle";
-				PRODUCT_NAME = "Services Menu Module";
+				PRODUCT_NAME = "Services Menu Plugin";
 			};
 			name = Release;
 		};
@@ -251,7 +240,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B230F45BCA6009433C0 /* Debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 			};
 			name = Debug;
 		};
@@ -259,14 +247,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4D308B290F45BCA6009433C0 /* Release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		7FFF24FF085E488600266176 /* Build configuration list for PBXNativeTarget "Services Menu Module" */ = {
+		7FFF24FF085E488600266176 /* Build configuration list for PBXNativeTarget "Services Menu Plugin" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				7FFF2500085E488600266176 /* Debug */,
