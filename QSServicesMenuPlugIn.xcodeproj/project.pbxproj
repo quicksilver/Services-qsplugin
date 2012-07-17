@@ -8,9 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1477B04710D0E52900B6698F /* QSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04310D0E52900B6698F /* QSCore.framework */; };
-		1477B04810D0E52900B6698F /* QSEffects.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04410D0E52900B6698F /* QSEffects.framework */; };
 		1477B04910D0E52900B6698F /* QSFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04510D0E52900B6698F /* QSFoundation.framework */; };
-		1477B04A10D0E52900B6698F /* QSInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04610D0E52900B6698F /* QSInterface.framework */; };
 		14DE946A10D0DFC600851A6F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14DE946910D0DFC600851A6F /* AppKit.framework */; };
 		4D4D66DC0F4722D600DAAB6B /* NSServiceModifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D66DB0F4722D600DAAB6B /* NSServiceModifications.plist */; };
 		7FE1627608294A8B00667242 /* QSServiceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1627508294A8B00667242 /* QSServiceAction.m */; };
@@ -18,9 +16,7 @@
 
 /* Begin PBXFileReference section */
 		1477B04310D0E52900B6698F /* QSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSCore.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSCore.framework; sourceTree = "<absolute>"; };
-		1477B04410D0E52900B6698F /* QSEffects.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSEffects.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSEffects.framework; sourceTree = "<absolute>"; };
 		1477B04510D0E52900B6698F /* QSFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSFoundation.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSFoundation.framework; sourceTree = "<absolute>"; };
-		1477B04610D0E52900B6698F /* QSInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSInterface.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSInterface.framework; sourceTree = "<absolute>"; };
 		14DE946910D0DFC600851A6F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		4D308B220F45BCA6009433C0 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		4D308B230F45BCA6009433C0 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -33,7 +29,7 @@
 		7FE1627408294A8B00667242 /* QSServiceAction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QSServiceAction.h; sourceTree = "<group>"; };
 		7FE1627508294A8B00667242 /* QSServiceAction.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSServiceAction.m; sourceTree = "<group>"; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "Services Menu Plugin.qsplugin"; path = "Services Menu Plugin.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Services Menu Plugin.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,9 +39,7 @@
 			files = (
 				14DE946A10D0DFC600851A6F /* AppKit.framework in Frameworks */,
 				1477B04710D0E52900B6698F /* QSCore.framework in Frameworks */,
-				1477B04810D0E52900B6698F /* QSEffects.framework in Frameworks */,
 				1477B04910D0E52900B6698F /* QSFoundation.framework in Frameworks */,
-				1477B04A10D0E52900B6698F /* QSInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,7 +71,7 @@
 		1ED78706FE9D4A0611CA0C5A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */,
+				8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -86,10 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				1477B04310D0E52900B6698F /* QSCore.framework */,
-				1477B04410D0E52900B6698F /* QSEffects.framework */,
 				1477B04510D0E52900B6698F /* QSFoundation.framework */,
-				1477B04610D0E52900B6698F /* QSInterface.framework */,
-				7FC20C8107FB741700FDD3CA /* Other Frameworks */,
 				14DE946910D0DFC600851A6F /* AppKit.framework */,
 			);
 			name = Frameworks;
@@ -126,13 +117,6 @@
 			path = /private/tmp/QS/Configuration;
 			sourceTree = "<absolute>";
 		};
-		7FC20C8107FB741700FDD3CA /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Other Frameworks";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -152,7 +136,7 @@
 			name = "Services Menu Plugin";
 			productInstallPath = "$(HOME)/Developer/Palettes";
 			productName = QSServicesMenuPlugIn;
-			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */;
+			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
@@ -220,7 +204,7 @@
 /* Begin XCBuildConfiguration section */
 		7FFF2500085E488600266176 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D308B260F45BCA6009433C0 /* QSPlugIn_Debug.xcconfig */;
+			baseConfigurationReference = 4D308B250F45BCA6009433C0 /* QSPlugIn.xcconfig */;
 			buildSettings = {
 				OTHER_LDFLAGS = "-bundle";
 				PRODUCT_NAME = "Services Menu Plugin";
@@ -229,7 +213,7 @@
 		};
 		7FFF2501085E488600266176 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D308B280F45BCA6009433C0 /* QSPlugIn_Release.xcconfig */;
+			baseConfigurationReference = 4D308B250F45BCA6009433C0 /* QSPlugIn.xcconfig */;
 			buildSettings = {
 				OTHER_LDFLAGS = "-bundle";
 				PRODUCT_NAME = "Services Menu Plugin";
