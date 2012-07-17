@@ -5,19 +5,21 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>Services Menu Module</string>
+	<string>Services Menu Plugin</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.blacktree.Quicksilver.QSServicesMenuPlugIn</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Services Menu Module</string>
+	<string>Services Menu Plugin</string>
+	<key>CFBundleDisplayName</key>
+	<string>Services Menu Plugin</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.1.1</string>
+	<string>1.2.0</string>
 	<key>CFBundleVersion</key>
-	<string>D7</string>
+	<string>D8</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2004, Blacktree, Inc.</string>
 	<key>NSPrincipalClass</key>
@@ -34,10 +36,19 @@
 		</array>
 		<key>description</key>
 		<string>Converts entries from the Services menu into actions</string>
+		<key>extendedDescription</key>
+		<string>&lt;h2&gt;Services Menu Plugin&lt;/h2&gt;
+
+&lt;p&gt;This plugin scans all the available services for your installed applications and adds them as actions. You can view the available actions by going to the Quicksilver &lt;a href=&quot;qs://preferences#QSSettingsPanePlaceholder&quot;&gt;Preferences&lt;/a&gt;, clicking &apos;Actions&apos; on the right hand side then filtering &apos;by Plugin&apos; for the &apos;Services Menu&apos; plugin.&lt;/p&gt;
+
+&lt;p&gt;This plugin can potentially add hundreds of new actions, which may affect the ranking of your preferred actions. If this occurs, re-rank your actions by dragging them up or down in the Actions preference pane.&lt;/p&gt;</string>
 		<key>icon</key>
 		<string>Menu</string>
-		<key>requiresFeature</key>
-		<string>1</string>
+	</dict>
+	<key>QSRequirements</key>
+	<dict>
+		<key>version</key>
+		<string>3930</string>
 	</dict>
 </dict>
 </plist>

@@ -1,14 +1,6 @@
 
 
 #import "QSServiceAction.h"
-
-#import <QSCore/QSCore.h>
-#import <QSCore/QSObject_Pasteboard.h>
-#import <QSCore/QSLibrarian.h>
-#import <QSCore/QSExecutor.h>
-#import <QSFoundation/NSWorkspace_BLTRExtensions.h>
-
-
 #define NSServicesKey	 		@"NSServices"
 #define NSMenuItemKey	 		@"NSMenuItem"
 #define NSMenuItemDisabledKey 		@"NSMenuItem (Disabled)"
@@ -38,18 +30,16 @@ NSArray *QSServicesPlugin_servicesForBundle(NSString *path) {
 NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
     NSFileManager *manager = [NSFileManager defaultManager];
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-       
+
     path = [path stringByStandardizingPath];
     NSArray *subPaths = [manager subpathsAtPath:path];
-    @autoreleasepool {
-        for (NSString *itemPath in subPaths){
-            if ([itemPath hasSuffix:infoPath]) {
-                itemPath = [path stringByAppendingPathComponent:itemPath];
-                NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
-                for (NSDictionary *servicesDict in servicesArray) {
-                    if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                        [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
-                    }
+    for (NSString *itemPath in subPaths){
+        if ([itemPath hasSuffix:infoPath]) {
+            itemPath = [path stringByAppendingPathComponent:itemPath];
+            NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
+            for (NSDictionary *servicesDict in servicesArray) {
+                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                    [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
                 }
             }
         }
@@ -59,17 +49,14 @@ NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
 
 NSArray *QSServicesPlugin_applicationProviders() {
     NSMutableArray *providers = [NSMutableArray arrayWithCapacity:1];
-
     
     NSArray *apps = [[NSWorkspace sharedWorkspace] allApplications];
-    @autoreleasepool {
-        for (NSString *itemPath in apps){
-            NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
-            for (NSDictionary *servicesDict in servicesArray) {
-                if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                    [providers addObject:itemPath];
-                }
-            }
+    for (NSString *itemPath in apps){
+        NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
+        for (NSDictionary *servicesDict in servicesArray) {
+            if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
+                [providers addObject:itemPath];
+            } 
         }
     }
     return providers;
@@ -84,11 +71,9 @@ NSArray *QSServicesPlugin_applicationProviders() {
 + (void)loadServiceActions {	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
-
-    @autoreleasepool {
-        for (id individualAction in serviceActions) {
-            [QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
-        }
+    
+    for (id individualAction in serviceActions) {
+        [QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
     }
 	//NSLog(@"Services Loaded");
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
@@ -103,10 +88,8 @@ NSArray *QSServicesPlugin_applicationProviders() {
     [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
     NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerSet count]];
     
-    @autoreleasepool {
-        for (id individualProvider in providerSet) {
-            [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
-        }
+    for (id individualProvider in providerSet) {
+        [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
     }
     
     return actionObjects;
@@ -115,6 +98,13 @@ NSArray *QSServicesPlugin_applicationProviders() {
 + (QSServiceActions *)serviceActionsForBundle:(NSString *)path {
     //NSLog(@"Loading Actions for Bundle: %@",path);
     return [[[[self class] alloc] initWithBundlePath:path] autorelease];
+}
+
+-(void)dealloc {
+    [serviceBundle release];
+    [serviceArray release];
+    [modificationsDictionary release];
+    [super dealloc];
 }
 
 - (id)initWithBundlePath:(NSString *)path {
@@ -161,10 +151,24 @@ NSArray *QSServicesPlugin_applicationProviders() {
         if ([serviceModifications objectForKey:@"name"])
             [serviceAction setName:[serviceModifications objectForKey:@"name"]];
 		
-		NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
+        NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
+        
+        // If the service is for specific file types, add as direct file types
+        if ([thisService objectForKey:@"NSSendFileTypes"]) {
+            if (![sendTypes containsObject:QSFilePathType]) {
+                sendTypes = [sendTypes arrayByAddingObject:QSFilePathType];
+            }
+            NSMutableArray *directFileTypes = [[thisService objectForKey:@"NSSendFileTypes"] mutableCopy];
+            // public.item UTI refers to all files
+            [directFileTypes removeObject:@"public.item"];
+            if ([directFileTypes count]) {
+                [serviceAction setDirectFileTypes:[thisService objectForKey:@"NSSendFileTypes"]];
+            }
+            [directFileTypes release];
+        }
         
 		if (sendTypes) {
-			[serviceAction setDirectTypes:sendTypes];
+            [serviceAction setDirectTypes:sendTypes];
 		}
 		
         [serviceAction setBundle:servicesBundle];
@@ -229,6 +233,9 @@ NSArray *QSServicesPlugin_applicationProviders() {
             @try {
                 if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
                     NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
+                    if ([thisService objectForKey:@"NSSendFileTypes"]) {
+                        sendTypes = [sendTypes arrayByAddingObject:NSFilenamesPboardType];
+                    }
                     [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
                     break;
                 }

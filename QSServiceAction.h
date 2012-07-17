@@ -1,7 +1,6 @@
 
 
 #import <Foundation/Foundation.h>
-#import <QSCore/QSActionProvider.h>
 
 #define kQSServicesMenuPlugInType @"QSServicesMenuPlugInType"
 
