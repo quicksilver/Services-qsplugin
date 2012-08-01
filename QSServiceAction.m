@@ -39,7 +39,7 @@ NSArray *QSServicesPlugin_providersAtPath(NSString *path) {
             NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:itemPath] objectForKey:NSServicesKey];
             for (NSDictionary *servicesDict in servicesArray) {
                 if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                    [providers addObject:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
+                    [providers addObject:[QSServiceActions serviceActionsForBundle:[[itemPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]]];
                 }
             }
         }
@@ -55,7 +55,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
         NSArray *servicesArray = [[NSDictionary dictionaryWithContentsOfFile:[itemPath stringByAppendingPathComponent:infoPath]] objectForKey:NSServicesKey];
         for (NSDictionary *servicesDict in servicesArray) {
             if ([servicesDict isKindOfClass:[NSDictionary class]] && [servicesDict count]) {
-                [providers addObject:itemPath];
+                [providers addObject:[QSServiceActions serviceActionsForBundle:itemPath]];
             } 
         }
     }
@@ -65,39 +65,44 @@ NSArray *QSServicesPlugin_applicationProviders() {
 @implementation QSServiceActions
 
 + (void)loadPlugIn {
-	[NSThread detachNewThreadSelector:@selector(loadServiceActions) toTarget:self withObject:nil];
+    dispatch_async(dispatch_get_global_queue(0,0),^{
+        [self loadServiceActions];
+    });
 }
+
 
 + (void)loadServiceActions {	
 	[[QSTaskController sharedInstance] updateTask:@"Load Actions" status:@"Loading Application Services" progress:-1];
     NSArray *serviceActions = [QSServiceActions allServiceActions];
     
-    for (id individualAction in serviceActions) {
-        [QSExec performSelectorOnMainThread:@selector(addActions:) withObject:[individualAction actions] waitUntilDone:YES];
+    for (QSServiceActions *individualAction in serviceActions) {
+        /* Note: calling dispatch_sync(main_thread) isn't necessarily equiv to calling [NSThread performSelectorOnMainThread...] but in this case it's find, as loadServiceActions is ALWAYS called on a background thread. See http://stackoverflow.com/questions/5225130/grand-central-dispatch-gcd-vs-performselector-need-a-better-explanation */
+        dispatch_sync(dispatch_get_main_queue(), ^{
+        [QSExec addActions:[individualAction actions]];
+        });
     }
-	//NSLog(@"Services Loaded");
+    QSPlugIn *thisPlugin = [QSPlugIn plugInWithBundle:[NSBundle bundleForClass:[self class]]];
+    
+    // Send a 'plugin loaded' notif so things like the list of actions (in the prefs) gets updated
+    [[NSNotificationCenter defaultCenter] postNotificationName:QSPlugInLoadedNotification object:thisPlugin];
 	[[QSTaskController sharedInstance] removeTask:@"Load Actions"];
 }
 
 
+// returns an array of path strings giving the paths of the bundle that contains the service
 + (NSArray *)allServiceActions {
-    NSMutableSet *providerSet = [NSMutableSet setWithCapacity:1];
-    [providerSet addObjectsFromArray:QSServicesPlugin_applicationProviders()];
-    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/System/Library/Services/")];
-    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/Library/Services/")];
-    [providerSet addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
-    NSMutableArray *actionObjects = [NSMutableArray arrayWithCapacity:[providerSet count]];
+    NSMutableSet *actionObjects = [NSMutableSet setWithCapacity:1];
+    [actionObjects addObjectsFromArray:QSServicesPlugin_applicationProviders()];
+    [actionObjects addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/System/Library/Services/")];
+    [actionObjects addObjectsFromArray:QSServicesPlugin_providersAtPath(@"/Library/Services/")];
+    [actionObjects addObjectsFromArray:QSServicesPlugin_providersAtPath(@"~/Library/Services/")];
     
-    for (id individualProvider in providerSet) {
-        [actionObjects addObject:[[self class] serviceActionsForBundle:individualProvider]];
-    }
-    
-    return actionObjects;
+    return [actionObjects allObjects];
 }
 
 + (QSServiceActions *)serviceActionsForBundle:(NSString *)path {
     //NSLog(@"Loading Actions for Bundle: %@",path);
-    return [[[[self class] alloc] initWithBundlePath:path] autorelease];
+    return [[[QSServiceActions alloc] initWithBundlePath:path] autorelease];
 }
 
 -(void)dealloc {
@@ -119,14 +124,13 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 - (NSArray *)types{ return nil; }
 
-- (NSArray *)actions {
-    NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
-    NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:serviceBundle];
-    [icon setSize:NSMakeSize(16, 16)];
-    
+- (NSArray *)actions {    
     if (![serviceArray count]) {
         return nil;
     }
+    NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
+    NSImage *actionIcon = [[NSWorkspace sharedWorkspace] iconForFile:serviceBundle];
+    [actionIcon setSize:NSMakeSize(16, 16)];
     NSBundle *servicesBundle = [NSBundle bundleWithIdentifier:kBundleID];
     NSString *serviceString = nil;
     for (NSDictionary *thisService in serviceArray) {
@@ -172,7 +176,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 		}
 		
         [serviceAction setBundle:servicesBundle];
-		[serviceAction setIcon:icon];
+		[serviceAction setIcon:actionIcon];
         [serviceAction setIconLoaded:YES];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];

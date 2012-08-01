@@ -29,7 +29,7 @@
 		7FE1627408294A8B00667242 /* QSServiceAction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = QSServiceAction.h; sourceTree = "<group>"; };
 		7FE1627508294A8B00667242 /* QSServiceAction.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = QSServiceAction.m; sourceTree = "<group>"; };
 		8D1AC9730486D14A00FE50C9 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Services Menu Plugin.bundle"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Services Menu Plugin.qsplugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +71,7 @@
 		1ED78706FE9D4A0611CA0C5A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */,
+				8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -136,7 +136,7 @@
 			name = "Services Menu Plugin";
 			productInstallPath = "$(HOME)/Developer/Palettes";
 			productName = QSServicesMenuPlugIn;
-			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.bundle */;
+			productReference = 8D1AC9740486D14A00FE50C9 /* Services Menu Plugin.qsplugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
