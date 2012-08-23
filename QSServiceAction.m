@@ -76,7 +76,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
     NSArray *serviceActions = [QSServiceActions allServiceActions];
     
     for (QSServiceActions *individualAction in serviceActions) {
-        /* Note: calling dispatch_sync(main_thread) isn't necessarily equiv to calling [NSThread performSelectorOnMainThread...] but in this case it's find, as loadServiceActions is ALWAYS called on a background thread. See http://stackoverflow.com/questions/5225130/grand-central-dispatch-gcd-vs-performselector-need-a-better-explanation */
+        /* Note: calling dispatch_sync(main_thread) isn't necessarily equiv to calling [NSThread performSelectorOnMainThread...] (previously used) but in this case it's fine, as loadServiceActions is ALWAYS called on a background thread. See http://stackoverflow.com/questions/5225130/grand-central-dispatch-gcd-vs-performselector-need-a-better-explanation */
         dispatch_sync(dispatch_get_main_queue(), ^{
         [QSExec addActions:[individualAction actions]];
         });
