@@ -91,5 +91,13 @@
 			<true/>
 		</dict>
 	</dict>
+	<key>com.apple.Safari</key>
+	<dict>
+		<key>Search With %WebSearchProvider@</key>
+		<dict>
+			<key>disabled</key>
+			<true/>
+		</dict>
+	</dict>
 </dict>
 </plist>
