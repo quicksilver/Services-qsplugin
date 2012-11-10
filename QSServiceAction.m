@@ -117,7 +117,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
         serviceBundle = [path copy];
         serviceArray = [QSServicesPlugin_servicesForBundle(path) retain];
         NSString *bundleIdentifier = [[NSBundle bundleWithPath:path] bundleIdentifier];
-        modificationsDictionary = [[[NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle:] pathForResource:@"NSServiceModifications" ofType:@"plist"]] objectForKey:bundleIdentifier] retain];
+        modificationsDictionary = [[[NSDictionary dictionaryWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"NSServiceModifications" ofType:@"plist"]] objectForKey:bundleIdentifier] retain];
     }
     return self;
 }
@@ -146,8 +146,9 @@ NSArray *QSServicesPlugin_applicationProviders() {
         }
         NSDictionary *serviceModifications = [modificationsDictionary objectForKey:serviceString];
         
-        if ([[serviceModifications objectForKey:@"disabled"] boolValue])
+        if ([[serviceModifications objectForKey:@"disabled"] boolValue]) {
             continue;
+        }
         
         QSAction *serviceAction = [[QSAction alloc] init];
         [serviceAction setIdentifier:serviceString];
