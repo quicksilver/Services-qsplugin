@@ -1,5 +1,3 @@
-
-
 #import "QSServiceAction.h"
 #define NSServicesKey	 		@"NSServices"
 #define NSMenuItemKey	 		@"NSMenuItem"
