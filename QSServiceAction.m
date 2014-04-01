@@ -190,7 +190,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 - (NSArray *)validActionsForDirectObject:(QSObject *)dObject indirectObject:(QSObject *)iObject {
     
-    BOOL fileType = [[dObject primaryType]isEqualToString:NSFilenamesPboardType];
+    BOOL fileType = [[dObject primaryType] isEqualToString:QSFilePathType];
     if (fileType && ![dObject validPaths])
         return nil;
 	NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
@@ -213,8 +213,9 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 
                 // Add if they intersect, but ignore ex
                 if ([sendTypes intersectsSet:availableTypes]){
-                    if (fileType && ![sendTypes containsObject:NSFilenamesPboardType])
+                    if (fileType && ![sendTypes containsObject:QSFilePathType]) {
                         continue;
+                    }
                     
                     [newActions addObject:menuItem];
                 }
@@ -238,7 +239,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
                     NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
                     if ([thisService objectForKey:@"NSSendFileTypes"]) {
-                        sendTypes = [sendTypes arrayByAddingObject:NSFilenamesPboardType];
+                        sendTypes = [sendTypes arrayByAddingObject:QSFilePathType];
                     }
                     [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
                     break;
