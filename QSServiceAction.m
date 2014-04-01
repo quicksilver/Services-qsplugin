@@ -165,16 +165,12 @@ NSArray *QSServicesPlugin_applicationProviders() {
             // public.item UTI refers to all files
             [directFileTypes removeObject:@"public.item"];
             if ([directFileTypes count]) {
-                [serviceAction setDirectFileTypes:[thisService objectForKey:@"NSSendFileTypes"]];
+                [serviceAction setDirectFileTypes:directFileTypes];
             }
             [directFileTypes release];
         }
         
 		if (sendTypes) {
-//            This is a **dirty hack** to deal with Quicksilver's lack of UTI support. public.utf8-plaint-text = NSStringPboardType
-            if ([sendTypes containsObject:@"public.utf8-plain-text"]) {
-                sendTypes = [sendTypes arrayByAddingObject:NSStringPboardType];
-            }
             [serviceAction setDirectTypes:sendTypes];
 		}
 		
