@@ -10,6 +10,8 @@
 		1477B04710D0E52900B6698F /* QSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04310D0E52900B6698F /* QSCore.framework */; };
 		1477B04910D0E52900B6698F /* QSFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04510D0E52900B6698F /* QSFoundation.framework */; };
 		14DE946A10D0DFC600851A6F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14DE946910D0DFC600851A6F /* AppKit.framework */; };
+		36698C83F76CA526CCAAF08A /* QSServiceObjectSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */; };
+		36698F7E4F579379555319FD /* QSBridgeServiceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 36698E8257BDDD7ACCA4618C /* QSBridgeServiceAction.m */; };
 		4D4D66DC0F4722D600DAAB6B /* NSServiceModifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D66DB0F4722D600DAAB6B /* NSServiceModifications.plist */; };
 		7FE1627608294A8B00667242 /* QSServiceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FE1627508294A8B00667242 /* QSServiceAction.m */; };
 /* End PBXBuildFile section */
@@ -18,6 +20,10 @@
 		1477B04310D0E52900B6698F /* QSCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSCore.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSCore.framework; sourceTree = "<absolute>"; };
 		1477B04510D0E52900B6698F /* QSFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QSFoundation.framework; path = /Applications/Quicksilver.app/Contents/Frameworks/QSFoundation.framework; sourceTree = "<absolute>"; };
 		14DE946910D0DFC600851A6F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		366987F6FAB75E91285B3284 /* QSBridgeServiceAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSBridgeServiceAction.h; sourceTree = "<group>"; };
+		36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSServiceObjectSource.m; sourceTree = "<group>"; };
+		36698D998747F2E8A9B907BE /* QSServiceObjectSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSServiceObjectSource.h; sourceTree = "<group>"; };
+		36698E8257BDDD7ACCA4618C /* QSBridgeServiceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSBridgeServiceAction.m; sourceTree = "<group>"; };
 		4D308B220F45BCA6009433C0 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		4D308B230F45BCA6009433C0 /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		4D308B240F45BCA6009433C0 /* Developer.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Developer.xcconfig; sourceTree = "<group>"; };
@@ -88,6 +94,10 @@
 			children = (
 				7FE1627408294A8B00667242 /* QSServiceAction.h */,
 				7FE1627508294A8B00667242 /* QSServiceAction.m */,
+				366987F6FAB75E91285B3284 /* QSBridgeServiceAction.h */,
+				36698E8257BDDD7ACCA4618C /* QSBridgeServiceAction.m */,
+				36698D998747F2E8A9B907BE /* QSServiceObjectSource.h */,
+				36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -185,6 +195,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				7FE1627608294A8B00667242 /* QSServiceAction.m in Sources */,
+				36698F7E4F579379555319FD /* QSBridgeServiceAction.m in Sources */,
+				36698C83F76CA526CCAAF08A /* QSServiceObjectSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

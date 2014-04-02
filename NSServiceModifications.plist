@@ -67,6 +67,22 @@
 			<true/>
 		</dict>
 	</dict>
+	<key>com.evernote.Evernote</key>
+	<dict>
+		<key>ENApplicationServiceMenuItemTitle</key>
+		<dict>
+			<key>name</key>
+			<string>Create Note in Evernote</string>
+		</dict>
+	</dict>
+	<key>com.apple.SpotlightService</key>
+	<dict>
+		<key>SEARCH_WITH_SPOTLIGHT</key>
+		<dict>
+			<key>name</key>
+			<string>Search Spotlight</string>
+		</dict>
+	</dict>
 	<key>com.barebones.bbedit</key>
 	<dict>
 		<key>BBEdit/Open File</key>

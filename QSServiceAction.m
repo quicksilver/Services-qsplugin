@@ -1,18 +1,14 @@
 
 
 #import "QSServiceAction.h"
-#define NSServicesKey	 		@"NSServices"
-#define NSMenuItemKey	 		@"NSMenuItem"
+#import "QSServiceObjectSource.h"
+#import "QSBridgeServiceAction.h"
+
 #define NSMenuItemDisabledKey 		@"NSMenuItem (Disabled)"
 
-#define NSSendTypesKey	 		@"NSSendTypes"
-#define NSReturnTypesKey	 	@"NSReturnTypes"
 
-#define DefaultKey	 		@"default"
 #define NSKeyEquivalentKey 		@"NSKeyEquivalent"
-#define infoPath			@"Contents/Info.plist"
 
-#define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
 
 NSArray *QSServicesPlugin_servicesForBundle(NSString *path) {
     if (path) {
@@ -64,6 +60,10 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 @implementation QSServiceActions
 
+@synthesize serviceArray;
+@synthesize serviceBundle;
+@synthesize modificationsDictionary;
+
 + (void)loadPlugIn {
     dispatch_async(dispatch_get_global_queue(0,0),^{
         [self loadServiceActions];
@@ -81,6 +81,12 @@ NSArray *QSServicesPlugin_applicationProviders() {
         [QSExec addActions:[individualAction actions]];
         });
     }
+
+        // create bridge actions for services
+    QSBridgeServiceAction *bridgeActions = [[QSBridgeServiceAction alloc] init];
+    [QSExec addActions:[bridgeActions createBridgeServiceAction]];
+    [bridgeActions release];
+
     QSPlugIn *thisPlugin = [QSPlugIn plugInWithBundle:[NSBundle bundleForClass:[self class]]];
     
     // Send a 'plugin loaded' notif so things like the list of actions (in the prefs) gets updated
