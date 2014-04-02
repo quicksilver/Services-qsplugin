@@ -167,16 +167,12 @@ NSArray *QSServicesPlugin_applicationProviders() {
             // public.item UTI refers to all files
             [directFileTypes removeObject:@"public.item"];
             if ([directFileTypes count]) {
-                [serviceAction setDirectFileTypes:[thisService objectForKey:@"NSSendFileTypes"]];
+                [serviceAction setDirectFileTypes:directFileTypes];
             }
             [directFileTypes release];
         }
         
 		if (sendTypes) {
-//            This is a **dirty hack** to deal with Quicksilver's lack of UTI support. public.utf8-plaint-text = NSStringPboardType
-            if ([sendTypes containsObject:@"public.utf8-plain-text"]) {
-                sendTypes = [sendTypes arrayByAddingObject:NSStringPboardType];
-            }
             [serviceAction setDirectTypes:sendTypes];
 		}
 		
@@ -196,7 +192,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 - (NSArray *)validActionsForDirectObject:(QSObject *)dObject indirectObject:(QSObject *)iObject {
     
-    BOOL fileType = [[dObject primaryType]isEqualToString:NSFilenamesPboardType];
+    BOOL fileType = [[dObject primaryType]isEqualToString:QSFilePathType];
     if (fileType && ![dObject validPaths])
         return nil;
 	NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
@@ -219,7 +215,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 
                 // Add if they intersect, but ignore ex
                 if ([sendTypes intersectsSet:availableTypes]){
-                    if (fileType && ![sendTypes containsObject:NSFilenamesPboardType])
+                    if (fileType && ![sendTypes containsObject:QSFilePathType])
                         continue;
                     
                     [newActions addObject:menuItem];
@@ -244,7 +240,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
                     NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
                     if ([thisService objectForKey:@"NSSendFileTypes"]) {
-                        sendTypes = [sendTypes arrayByAddingObject:NSFilenamesPboardType];
+                        sendTypes = [sendTypes arrayByAddingObject:QSFilePathType];
                     }
                     [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
                     break;
