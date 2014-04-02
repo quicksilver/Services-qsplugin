@@ -183,6 +183,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
         [serviceAction setBundle:servicesBundle];
 		[serviceAction setIcon:actionIcon];
         [serviceAction setIconLoaded:YES];
+        [serviceAction setRetainsIcon:YES];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
