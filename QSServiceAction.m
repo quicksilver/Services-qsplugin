@@ -1,18 +1,14 @@
 
 
 #import "QSServiceAction.h"
-#define NSServicesKey	 		@"NSServices"
-#define NSMenuItemKey	 		@"NSMenuItem"
+#import "QSServiceObjectSource.h"
+#import "QSBridgeServiceAction.h"
+
 #define NSMenuItemDisabledKey 		@"NSMenuItem (Disabled)"
 
-#define NSSendTypesKey	 		@"NSSendTypes"
-#define NSReturnTypesKey	 	@"NSReturnTypes"
 
-#define DefaultKey	 		@"default"
 #define NSKeyEquivalentKey 		@"NSKeyEquivalent"
-#define infoPath			@"Contents/Info.plist"
 
-#define kBundleID @"com.blacktree.Quicksilver.QSServicesMenuPlugIn"
 
 NSArray *QSServicesPlugin_servicesForBundle(NSString *path) {
     if (path) {
@@ -64,6 +60,10 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 @implementation QSServiceActions
 
+@synthesize serviceArray;
+@synthesize serviceBundle;
+@synthesize modificationsDictionary;
+
 + (void)loadPlugIn {
     dispatch_async(dispatch_get_global_queue(0,0),^{
         [self loadServiceActions];
@@ -81,6 +81,12 @@ NSArray *QSServicesPlugin_applicationProviders() {
         [QSExec addActions:[individualAction actions]];
         });
     }
+
+        // create bridge actions for services
+    QSBridgeServiceAction *bridgeActions = [[QSBridgeServiceAction alloc] init];
+    [QSExec addActions:[bridgeActions createBridgeServiceAction]];
+    [bridgeActions release];
+
     QSPlugIn *thisPlugin = [QSPlugIn plugInWithBundle:[NSBundle bundleForClass:[self class]]];
     
     // Send a 'plugin loaded' notif so things like the list of actions (in the prefs) gets updated
@@ -167,22 +173,19 @@ NSArray *QSServicesPlugin_applicationProviders() {
             // public.item UTI refers to all files
             [directFileTypes removeObject:@"public.item"];
             if ([directFileTypes count]) {
-                [serviceAction setDirectFileTypes:[thisService objectForKey:@"NSSendFileTypes"]];
+                [serviceAction setDirectFileTypes:directFileTypes];
             }
             [directFileTypes release];
         }
         
 		if (sendTypes) {
-//            This is a **dirty hack** to deal with Quicksilver's lack of UTI support. public.utf8-plaint-text = NSStringPboardType
-            if ([sendTypes containsObject:@"public.utf8-plain-text"]) {
-                sendTypes = [sendTypes arrayByAddingObject:NSStringPboardType];
-            }
             [serviceAction setDirectTypes:sendTypes];
 		}
 		
         [serviceAction setBundle:servicesBundle];
 		[serviceAction setIcon:actionIcon];
         [serviceAction setIconLoaded:YES];
+        [serviceAction setRetainsIcon:YES];
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
@@ -195,7 +198,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 
 - (NSArray *)validActionsForDirectObject:(QSObject *)dObject indirectObject:(QSObject *)iObject {
     
-    BOOL fileType = [[dObject primaryType]isEqualToString:NSFilenamesPboardType];
+    BOOL fileType = [[dObject primaryType]isEqualToString:QSFilePathType];
     if (fileType && ![dObject validPaths])
         return nil;
 	NSMutableArray *newActions = [NSMutableArray arrayWithCapacity:1];
@@ -218,7 +221,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 
                 // Add if they intersect, but ignore ex
                 if ([sendTypes intersectsSet:availableTypes]){
-                    if (fileType && ![sendTypes containsObject:NSFilenamesPboardType])
+                    if (fileType && ![sendTypes containsObject:QSFilePathType])
                         continue;
                     
                     [newActions addObject:menuItem];
@@ -243,7 +246,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
                 if ([[[thisService objectForKey:NSMenuItemKey] objectForKey:DefaultKey] isEqualToString:[action identifier]]) {
                     NSArray *sendTypes = [thisService objectForKey:NSSendTypesKey];
                     if ([thisService objectForKey:@"NSSendFileTypes"]) {
-                        sendTypes = [sendTypes arrayByAddingObject:NSFilenamesPboardType];
+                        sendTypes = [sendTypes arrayByAddingObject:QSFilePathType];
                     }
                     [dObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
                     break;

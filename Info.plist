@@ -39,11 +39,43 @@
 		<key>extendedDescription</key>
 		<string>&lt;h2&gt;Services Menu Plugin&lt;/h2&gt;
 
-&lt;p&gt;This plugin scans all the available services for your installed applications and adds them as actions. You can view the available actions by going to the Quicksilver &lt;a href="qs://preferences#QSSettingsPanePlaceholder"&gt;Preferences&lt;/a&gt;, clicking 'Actions' on the right hand side then filtering 'by Plugin' for the 'Services Menu' plugin.&lt;/p&gt;
+&lt;p&gt;This plugin scans all the available services for your installed applications and adds them as actions. You can view the available actions by going to the Quicksilver &lt;a href=&quot;qs://preferences#QSSettingsPanePlaceholder&quot;&gt;Preferences&lt;/a&gt;, clicking &apos;Actions&apos; on the right hand side then filtering &apos;by Plugin&apos; for the &apos;Services Menu&apos; plugin.&lt;/p&gt;
 
 &lt;p&gt;This plugin can potentially add hundreds of new actions, which may affect the ranking of your preferred actions. If this occurs, re-rank your actions by dragging them up or down in the Actions preference pane.&lt;/p&gt;</string>
 		<key>icon</key>
-		<string>Menu</string>
+		<string>Gear</string>
+	</dict>
+	<key>QSPresetAdditions</key>
+	<array>
+		<dict>
+			<key>ID</key>
+			<string>QSServiceObjectPreset</string>
+			<key>enabled</key>
+			<true/>
+			<key>settings</key>
+			<dict/>
+			<key>icon</key>
+			<string>Gear</string>
+			<key>name</key>
+			<string>Services Menu Actions</string>
+			<key>source</key>
+			<string>QSServiceObjectSource</string>
+		</dict>
+	</array>
+	<key>QSRegistration</key>
+	<dict>
+		<key>QSTypeDefinitions</key>
+		<dict/>
+		<key>QSObjectSources</key>
+		<dict>
+			<key>QSServiceObjectSource</key>
+			<string>QSServiceObjectSource</string>
+		</dict>
+	</dict>
+	<key>QSObjectSources</key>
+	<dict>
+		<key>QSServiceObjectSource</key>
+		<string>QSServiceObjectSource</string>
 	</dict>
 	<key>QSRequirements</key>
 	<dict>
