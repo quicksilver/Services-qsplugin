@@ -10,6 +10,7 @@
 		1477B04710D0E52900B6698F /* QSCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04310D0E52900B6698F /* QSCore.framework */; };
 		1477B04910D0E52900B6698F /* QSFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1477B04510D0E52900B6698F /* QSFoundation.framework */; };
 		14DE946A10D0DFC600851A6F /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14DE946910D0DFC600851A6F /* AppKit.framework */; };
+		36698269B9711733DDADAC34 /* Gear.png in Resources */ = {isa = PBXBuildFile; fileRef = 36698C4F07DED3EA48343AC8 /* Gear.png */; };
 		36698C83F76CA526CCAAF08A /* QSServiceObjectSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */; };
 		36698F7E4F579379555319FD /* QSBridgeServiceAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 36698E8257BDDD7ACCA4618C /* QSBridgeServiceAction.m */; };
 		4D4D66DC0F4722D600DAAB6B /* NSServiceModifications.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D4D66DB0F4722D600DAAB6B /* NSServiceModifications.plist */; };
@@ -22,6 +23,7 @@
 		14DE946910D0DFC600851A6F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		366987F6FAB75E91285B3284 /* QSBridgeServiceAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSBridgeServiceAction.h; sourceTree = "<group>"; };
 		36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSServiceObjectSource.m; sourceTree = "<group>"; };
+		36698C4F07DED3EA48343AC8 /* Gear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Gear.png; sourceTree = "<group>"; };
 		36698D998747F2E8A9B907BE /* QSServiceObjectSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSServiceObjectSource.h; sourceTree = "<group>"; };
 		36698E8257BDDD7ACCA4618C /* QSBridgeServiceAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QSBridgeServiceAction.m; sourceTree = "<group>"; };
 		4D308B220F45BCA6009433C0 /* Common.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 			children = (
 				4D4D66DB0F4722D600DAAB6B /* NSServiceModifications.plist */,
 				8D1AC9730486D14A00FE50C9 /* Info.plist */,
+				36698FE8935EED8761EB370C /* Images */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -100,6 +103,14 @@
 				36698B12077B2D6B54A9688F /* QSServiceObjectSource.m */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		36698FE8935EED8761EB370C /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				36698C4F07DED3EA48343AC8 /* Gear.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 		4D308B210F45BCA6009433C0 /* Configuration */ = {
@@ -167,6 +178,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D4D66DC0F4722D600DAAB6B /* NSServiceModifications.plist in Resources */,
+				36698269B9711733DDADAC34 /* Gear.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

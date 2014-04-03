@@ -43,7 +43,7 @@
 
 &lt;p&gt;This plugin can potentially add hundreds of new actions, which may affect the ranking of your preferred actions. If this occurs, re-rank your actions by dragging them up or down in the Actions preference pane.&lt;/p&gt;</string>
 		<key>icon</key>
-		<string>Menu</string>
+		<string>Gear</string>
 	</dict>
 	<key>QSPresetAdditions</key>
 	<array>
@@ -53,14 +53,9 @@
 			<key>enabled</key>
 			<true/>
 			<key>settings</key>
-			<dict>
-				<key>path</key>
-				<string>~/.hosts</string>
-				<key>skipItem</key>
-				<true/>
-			</dict>
+			<dict/>
 			<key>icon</key>
-			<string>Menu</string>
+			<string>Gear</string>
 			<key>name</key>
 			<string>Services Menu Actions</string>
 			<key>source</key>

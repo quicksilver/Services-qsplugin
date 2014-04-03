@@ -2,7 +2,6 @@
 // Created by Tony Papale on 3/29/14.
 //
 
-// TODO: add types for contact email & address and others...
 #define QSBridgeServiceObjectTextType           @"QSBridgeServiceObjectTextType"
 #define QSBridgeServiceObjectTextSearchType     @"QSBridgeServiceObjectTextSearchType"
 #define QSBridgeServiceObjectFileType           @"QSBridgeServiceObjectFileType"

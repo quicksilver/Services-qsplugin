@@ -29,7 +29,7 @@
 
 - (NSImage *) iconForEntry:(NSDictionary *)theEntry
 {
-    return [QSResourceManager imageNamed:@"Menu"];
+    return [QSResourceManager imageNamed:@"Gear"];
 }
 
 - (NSArray *) objectsForEntry:(NSDictionary *)theEntry
@@ -152,7 +152,7 @@
                     reqContextArray = requiredContext;
                 }
 
-                // TODO: add more contexts here?
+                // TODO: add support for more contexts here?
                 for (NSDictionary *reqContextDict in reqContextArray)
                 {
                     if ([reqContextDict isKindOfClass:[NSDictionary class]])

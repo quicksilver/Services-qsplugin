@@ -87,10 +87,11 @@
 
             if ([dObject.primaryType isEqualToString:QSBridgeServiceObjectFileType])
             {
-//                sendTypes = [sendTypes arrayByAddingObject:NSFilenamesPboardType];
                 sendTypes = [sendTypes arrayByAddingObject:QSFilePathType];
             }
 
+            // TODO: This doesn't seem to work that well with files.
+            // TODO: There is a note in the method about an update to this method so i left it as is.
             [iObject putOnPasteboard:pboard declareTypes:sendTypes includeDataForTypes:sendTypes];
 
         }
