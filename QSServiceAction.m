@@ -186,6 +186,7 @@ NSArray *QSServicesPlugin_applicationProviders() {
 		[serviceAction setProvider:self];
 		[serviceAction setDisplaysResult:YES];
 		[serviceAction setDetails:[NSString stringWithFormat:@"A service of %@",[serviceBundle lastPathComponent]]];
+        [serviceAction setArgumentCount:1];
 		
 		[newActions addObject:serviceAction];
 
